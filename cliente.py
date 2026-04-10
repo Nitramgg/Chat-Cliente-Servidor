@@ -10,12 +10,12 @@ def iniciar_cliente():
         cliente.connect((HOST, PORT))
 
         print("Conectado al servidor")
-        print("Escribí mensajes (escribí 'exit' para salir)\n")
+        print("Escribí mensajes (escribí 'exito' para salir)\n")
 
         while True:
             mensaje = input("Mensaje: ")
 
-            if mensaje.lower() == "exit":
+            if mensaje.lower() == "exito":
                 print("Cerrando conexión...")
                 break
 
