@@ -9,27 +9,27 @@ def iniciar_cliente():
         cliente = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         cliente.connect((HOST, PORT))
 
-        print("✅ Conectado al servidor")
+        print("Conectado al servidor")
         print("Escribí mensajes (escribí 'exito' para salir)\n")
 
         while True:
-            mensaje = input("📝 Mensaje: ")
+            mensaje = input("Mensaje: ")
 
             if mensaje.lower() == "exito":
-                print("👋 Cerrando conexión...")
+                print("Cerrando conexión...")
                 break
 
             cliente.send(mensaje.encode())
 
             respuesta = cliente.recv(1024).decode()
-            print(f"📩 Servidor: {respuesta}")
+            print(f"Servidor: {respuesta}")
 
         cliente.close()
 
     except ConnectionRefusedError:
-        print("❌ No se pudo conectar al servidor")
+        print("No se pudo conectar al servidor")
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"Error: {e}")
 
 
 if __name__ == "__main__":
