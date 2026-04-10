@@ -2,21 +2,17 @@ import socket
 import sqlite3
 from datetime import datetime
 
-# Configuración del servidor
-
 HOST = '127.0.0.1'
 PORT = 5000
 DB_NAME = 'chat.db'
 
 
 # Inicializar base de datos
-
 def inicializar_db():
     try:
         conn = sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
 
-        # Crear tabla si no existe
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS mensajes (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,11 +26,10 @@ def inicializar_db():
         conn.close()
 
     except Exception as e:
-        print(f"Error al inicializar la DB: {e}")
+        print(f"Error DB: {e}")
 
 
-# Guardar mensaje en DB
-
+# Guardar mensaje
 def guardar_mensaje(contenido, ip_cliente):
     try:
         conn = sqlite3.connect(DB_NAME)
@@ -53,17 +48,14 @@ def guardar_mensaje(contenido, ip_cliente):
         return fecha
 
     except Exception as e:
-        print(f"Error al guardar mensaje: {e}")
+        print(f"Error guardando: {e}")
         return None
 
 
-# Inicializar socket servidor
-
+# Inicializar socket
 def inicializar_socket():
     try:
         servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-        # Permite reutilizar el puerto si queda ocupado
         servidor.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
         servidor.bind((HOST, PORT))
@@ -73,14 +65,13 @@ def inicializar_socket():
         return servidor
 
     except OSError as e:
-        print(f"Error con el puerto: {e}")
+        print(f"Error puerto: {e}")
         return None
 
 
-# Manejo de clientes
-
+# Manejar cliente
 def manejar_cliente(conn, addr):
-    print(f"Conectado con {addr}")
+    print(f"Conectado: {addr}")
 
     try:
         while True:
@@ -91,26 +82,24 @@ def manejar_cliente(conn, addr):
 
             mensaje = data.decode()
 
-            # Guardar en DB
             fecha = guardar_mensaje(mensaje, addr[0])
 
             if fecha:
                 respuesta = f"Mensaje recibido: {fecha}"
             else:
-                respuesta = "Error al guardar el mensaje"
+                respuesta = "Error al guardar"
 
             conn.send(respuesta.encode())
 
     except Exception as e:
-        print(f"Error con cliente {addr}: {e}")
+        print(f"Error cliente: {e}")
 
     finally:
         conn.close()
-        print(Conexión cerrada con {addr}")
+        print(f"Desconectado: {addr}")
 
 
 # Aceptar conexiones
-
 def aceptar_conexiones(servidor):
     while True:
         try:
@@ -118,11 +107,10 @@ def aceptar_conexiones(servidor):
             manejar_cliente(conn, addr)
 
         except Exception as e:
-            print(f"Error aceptando conexiones: {e}")
+            print(f"Error conexión: {e}")
 
 
 # MAIN
-
 if __name__ == "__main__":
     inicializar_db()
     servidor = inicializar_socket()
